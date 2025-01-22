@@ -1,12 +1,14 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+  const user = false;
   return (
-    <div className="navbar bg-base-100 ">
+    <div className="navbar fixed top-0 bg-base-100 z-20">
   <div className="flex-1">
-    <a className="btn btn-ghost text-xl">DevTinder</a>
+    <Link to="/" className="btn btn-ghost text-xl">DevTinder</Link>
   </div>
-  <div className="flex-none gap-2">
+  {user && <div className="flex-none gap-2">
     <div className="dropdown dropdown-end">
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full">
@@ -28,7 +30,7 @@ const Navbar = () => {
         <li><a>Logout</a></li>
       </ul>
     </div>
-  </div>
+  </div>}
 </div>
   )
 }
