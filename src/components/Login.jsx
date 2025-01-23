@@ -2,9 +2,11 @@
 
 import axios from "axios";
 import { Eye, EyeClosed, Loader } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { LOGIN_URL } from "../constants/routes";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +16,10 @@ export default function LoginForm() {
     emailId: "",
     password: "",
   });
+  const user = useSelector(store => store.user)
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const togglePassword = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -27,8 +33,6 @@ export default function LoginForm() {
     try {
       e.preventDefault();
       setIsLoading(true);
-      console.log(LOGIN_URL)
-      console.log(inputFields)
       // Handle  form submission logic here
       const res = await axios.post(
         LOGIN_URL,
@@ -39,7 +43,9 @@ export default function LoginForm() {
           withCredentials: true,
         }
       );
-      console.log(res.data)
+
+      dispatch(addUser(res.data));
+      navigate("/app")
     } catch (error) {
       console.log(error.response.data);
       setIsLoading(false);
@@ -47,10 +53,15 @@ export default function LoginForm() {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    if(user){
+      navigate("/app")
+    }
+  },[user])
 
   return (
     <div
-      className=" min-h-screen flex items-center justify-center p-4 animate-fade-in"
+      className=" h-[calc(100vh-64px)] flex items-center justify-center p-4 animate-fade-in"
       style={{
         background: "linear-gradient(to right, #514A9D, #24C6DC)",
       }}

@@ -2,9 +2,10 @@
 
 import axios from "axios";
 import { Eye, EyeClosed, Loader, Loader2 } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { SIGNUP_URL } from "../constants/routes";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +17,10 @@ export default function SignUpForm() {
     emailId: "",
     password: "",
   });
+  const user = useSelector(store => store.user)
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const togglePassword = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -49,10 +54,15 @@ export default function SignUpForm() {
       setIsLoading(false);
     }
   };
+   useEffect(() => {
+      if(user){
+        navigate("/app")
+      }
+    },[user])
 
   return (
     <div
-      className=" min-h-screen flex  items-center justify-center p-4 animate-fade-in"
+      className=" h-[calc(100vh-64px)] flex  items-center justify-center p-4 animate-fade-in"
       style={{
         background: "linear-gradient(to right, #514A9D, #24C6DC)",
       }}
@@ -87,6 +97,7 @@ export default function SignUpForm() {
                 <p className="mt-1 text-xs text-red-500">{errors.firstName}</p>
               )}
             </div>
+            
             <div>
               <label
                 htmlFor="lastName"

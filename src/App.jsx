@@ -1,24 +1,32 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Body from "./Body";
 import SignUpForm from "./components/SignUpForm";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import Hero from "./components/Hero";
-
+import { Provider } from "react-redux";
+import appStore from "./utils/appStore";
+import Body from "./components/Body";
+import Feed from "./components/Feed";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function App() {
   return (
     <>
-    <BrowserRouter basename="/">
-      <Routes>
-        <Route path="/" element={<Body/>}>
-          <Route path="/" element={<Hero/>}/>
-          <Route path="/signup" element={<SignUpForm/>}/>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/profile" element={<Profile/>}/>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+      <Provider store={appStore}>
+        {/* <PersistGate loading={null} persistor={persistor}> */}
+          <BrowserRouter basename="/">
+            <Routes>
+              <Route path="/" element={<Body />}>
+                <Route path="/" element={<Hero />} />
+                <Route path="/app" element={<Feed />} />
+                <Route path="/signup" element={<SignUpForm />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/app/profile" element={<Profile />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        {/* </PersistGate> */}
+      </Provider>
     </>
-  )
+  );
 }

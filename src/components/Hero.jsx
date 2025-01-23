@@ -2,19 +2,32 @@
 
 import { ChevronDownIcon } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import heroImage from "../assets/images/hero.jpg";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Hero() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const user = useSelector((store) => store.user);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
+  
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/app");
+    }
+  },[user])
 
   return (
     <div

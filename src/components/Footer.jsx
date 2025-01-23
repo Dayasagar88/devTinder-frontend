@@ -1,7 +1,11 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 const Footer = () => {
-  return (
+
+  const user = useSelector(store => store?.user)
+
+  user && (
     <footer className="footer text-gray-200  items-center p-4 "  style={{
       background: "linear-gradient(to right, #3B3A73, #1F78A4)", // Slightly darker tones
     }}
