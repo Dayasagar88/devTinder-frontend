@@ -1,15 +1,54 @@
 "use client";
 
+import axios from "axios";
+import { Eye, EyeClosed, Loader, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { SIGNUP_URL } from "../constants/routes";
 
 export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    emailId: "",
+    password: "",
+  });
 
-  const validateForm = (formData) => {};
+  const togglePassword = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
-  const handleSubmit = (e) => {};
+  const HandleFormData = async (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      setIsLoading(true);
+      const res = await axios.post(
+        SIGNUP_URL,
+        {
+          ...formData,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res.data)
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error.response.data);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div
@@ -35,6 +74,8 @@ export default function SignUpForm() {
                 First Name
               </label>
               <input
+                value={formData.firstName}
+                onChange={(e) => HandleFormData(e)}
                 type="text"
                 id="firstName"
                 name="firstName"
@@ -54,6 +95,8 @@ export default function SignUpForm() {
                 Last Name
               </label>
               <input
+                value={formData.lastName}
+                onChange={(e) => HandleFormData(e)}
                 type="text"
                 id="lastName"
                 name="lastName"
@@ -73,9 +116,11 @@ export default function SignUpForm() {
                 Email
               </label>
               <input
+                value={formData.emailId}
+                onChange={(e) => HandleFormData(e)}
                 type="email"
-                id="email"
-                name="email"
+                id="emaiId"
+                name="emailId"
                 placeholder="john@example.com"
                 className="mt-1 block w-full px-3 py-1 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 required
@@ -84,21 +129,37 @@ export default function SignUpForm() {
                 <p className="mt-1 text-xs text-red-500">{errors.email}</p>
               )}
             </div>
-            <div>
+            <div className="">
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-200"
               >
                 Password
               </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="********"
-                className="mt-1 block w-full px-3 py-1 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                required
-              />
+              <div className=" relative">
+                <input
+                  value={formData.password}
+                  onChange={(e) => HandleFormData(e)}
+                  type={isPasswordVisible ? "password" : "text"}
+                  id="password"
+                  name="password"
+                  placeholder={isPasswordVisible ? "••••••••" : "john@1234"}
+                  className="mt-1 block w-full px-3 py-1 bg-gray-700 border border-gray-600 rounded-md text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                  required
+                />
+                {!isPasswordVisible ? (
+                  <Eye
+                    onClick={togglePassword}
+                    className="absolute right-2 top-1 cursor-pointer"
+                  />
+                ) : (
+                  <EyeClosed
+                    onClick={togglePassword}
+                    className=" absolute right-2 top-1 cursor-pointer"
+                  />
+                )}
+              </div>
+
               {errors.password && (
                 <p className="mt-1 text-xs text-red-500">{errors.password}</p>
               )}
@@ -110,7 +171,11 @@ export default function SignUpForm() {
               }`}
               disabled={isLoading}
             >
-              {isLoading ? "Signing up..." : "Sign Up"}
+              {isLoading ? (
+                <Loader className="animate-spin m-auto" />
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </form>
           <div className="mt-4 text-center">

@@ -17,15 +17,15 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className="min-h-screen text-white" style={{
+    <div
+      className="min-h-screen text-white"
+      style={{
         background: "linear-gradient(to right, #514A9D, #24C6DC)",
-      }}>
-      {/* <div className="navbar bg-base-100 shadow-sm fixed  z-20 top-0">
-        <Link to="/" className="btn btn-ghost text-xl">DevTinder</Link>
-      </div> */}
+      }}
+    >
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center bg-cover bg-center">
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="absolute inset- bg-black bg-opacity-50"></div>
         <div className="relative z-10 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in-down">
             Connecting Developers. Building Futures.
@@ -34,7 +34,7 @@ export default function Hero() {
             Find your next tech collaborator, mentor, or opportunity.
           </p>
           <div className="space-x-4">
-            <button className="bg-cyan-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-cyan-600 transition duration-300 ease-in-out transform hover:scale-105 animate-pulse">
+            <button className="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 transition duration-300 ease-in-out transform hover:scale-105 animate-pulse">
               <Link to="/signup">Create an Account</Link>
             </button>
             <button className="bg-transparent border border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition duration-300 ease-in-out">
