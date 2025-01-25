@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -151,7 +151,7 @@ export default function SignUpForm() {
                 <input
                   value={formData.password}
                   onChange={(e) => HandleFormData(e)}
-                  type={isPasswordVisible ? "password" : "text"}
+                  type={!isPasswordVisible ? "password" : "text"}
                   id="password"
                   name="password"
                   placeholder={isPasswordVisible ? "••••••••" : "john@1234"}
@@ -159,15 +159,16 @@ export default function SignUpForm() {
                   required
                 />
                 {!isPasswordVisible ? (
+                  
                   <Eye
-                    onClick={togglePassword}
-                    className="absolute right-2 top-1 cursor-pointer"
-                  />
+                  onClick={togglePassword}
+                  className=" absolute right-2 top-1 cursor-pointer"
+                />
                 ) : (
                   <EyeClosed
-                    onClick={togglePassword}
-                    className=" absolute right-2 top-1 cursor-pointer"
-                  />
+                  onClick={togglePassword}
+                  className="absolute right-2 top-1 cursor-pointer"
+                />
                 )}
               </div>
 

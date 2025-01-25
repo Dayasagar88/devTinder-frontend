@@ -10,11 +10,10 @@ const messages = [
     time: "3h ago",
   },
 ]
-// eslint-disable-next-line react/prop-types
 export default function MessageSidebar({ isOpen, onClose }) {
   return (
     <div
-  className={`fixed top-[64px] left-0 w-80 h-[calc(100vh-64px)] bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+  className={`fixed top-[64px] left-0 w-80 h-[calc(100vh-64px)] bg-[#3B3A73] shadow-lg transform transition-transform duration-300 ease-in-out ${
     isOpen ? "-translate-x-0" : "-translate-x-full"
   }`}
 >
@@ -30,9 +29,9 @@ export default function MessageSidebar({ isOpen, onClose }) {
             <div key={message.id} className="border-b pb-2">
               <div className="flex justify-between items-start">
                 <span className="font-semibold">{message.name}</span>
-                <span className="text-xs text-gray-500">{message.time}</span>
+                <span className="text-xs">{message.time}</span>
               </div>
-              <p className="text-sm text-gray-600 truncate">{message.message}</p>
+              <p className="text-sm text-gray-400 truncate">{message.message}</p>
             </div>
           ))}
         </div>

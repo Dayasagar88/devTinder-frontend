@@ -6,8 +6,11 @@ import MessageSidebar from "./MessageSideBar";
 import SearchPage from "./ConnectionRequestsPage";
 import { HomeIcon, MessageCircle, Search, Users } from "lucide-react";
 import ConnectionRequestsPage from "./ConnectionRequestsPage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FEED_URL } from "@/constants/routes";
+import { addFeed } from "@/utils/feedSlice";
 
 const developers = [
   {
@@ -42,8 +45,10 @@ export default function FeedPage() {
   const [isMessageSidebarOpen, setIsMessageSidebarOpen] = useState(false);
   const [isConnectionRequestsOpen, setIsConnectionRequestsOpen] =
     useState(false);
+    const [userFeed , setUserFeed] = useState({});
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const currentDeveloper = developers[currentIndex];
 
@@ -56,13 +61,29 @@ export default function FeedPage() {
     }
   };
 
+  const getFeed = async () => {
+    try {
+      const res = await axios.get(FEED_URL, { withCredentials: true });
+      if (res.data.success) {
+        dispatch(addFeed(res.data?.feedUsers));
+        setUserFeed(res.data?.feedUsers);
+      }
+    } catch (error) {
+      console.log(error.response.message);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
     }
   }, [user]);
 
-  return (
+  useEffect(() => {
+    getFeed();
+  }, []);
+
+  return userFeed && (
     <div
       className="h-[calc(100vh-64px)]
     flex flex-col  items-center justify-center p-4 overflow-y-hidden"

@@ -47,7 +47,7 @@ export default function Hero() {
             Find your next tech collaborator, mentor, or opportunity.
           </p>
           <div className="space-x-4">
-            <button className="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 transition duration-300 ease-in-out transform hover:scale-105 animate-pulse">
+            <button className="bg-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-purple-700 transition duration-2 ease-in-out transform hover:scale-105 animate-pulse">
               <Link to="/signup">Create an Account</Link>
             </button>
             <button className="bg-transparent border border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition duration-300 ease-in-out">

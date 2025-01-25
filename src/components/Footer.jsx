@@ -5,7 +5,7 @@ const Footer = () => {
 
   const user = useSelector(store => store?.user)
 
-  user && (
+  return !user && (
     <footer className="footer text-gray-200  items-center p-4 "  style={{
       background: "linear-gradient(to right, #3B3A73, #1F78A4)", // Slightly darker tones
     }}

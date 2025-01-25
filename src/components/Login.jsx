@@ -11,7 +11,7 @@ import { addUser } from "../utils/userSlice";
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
   const [inputFields, setInputFields] = useState({
     emailId: "",
     password: "",
@@ -117,7 +117,7 @@ export default function LoginForm() {
                       [e.target.name]: e.target.value,
                     }))
                   }
-                  type={isPasswordVisible ? "password" : "text"}
+                  type={!isPasswordVisible ? "password" : "text"}
                   id="password"
                   name="password"
                   placeholder={isPasswordVisible ? "••••••••" : "john@1234"}
@@ -125,12 +125,12 @@ export default function LoginForm() {
                   required
                 />
                 {!isPasswordVisible ? (
-                  <EyeClosed
+                  <Eye
                     onClick={togglePassword}
                     className=" absolute right-2 top-1 cursor-pointer"
                   />
                 ) : (
-                  <Eye
+                  <EyeClosed
                     onClick={togglePassword}
                     className="absolute right-2 top-1 cursor-pointer"
                   />
