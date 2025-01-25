@@ -29,7 +29,7 @@ const Body = () => {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [userData]);
 
   return (
     <div>

@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { LOGIN_URL } from "../constants/routes";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { toast } from "sonner";
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +17,7 @@ export default function LoginForm() {
     emailId: "",
     password: "",
   });
-  const user = useSelector(store => store.user)
+  const user = useSelector((store) => store.user);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,9 +44,11 @@ export default function LoginForm() {
           withCredentials: true,
         }
       );
-
-      dispatch(addUser(res.data));
-      navigate("/app")
+      if (res.data.success) {
+        dispatch(addUser(res.data));
+        toast.success(res.data?.message);
+        navigate("/app");
+      }
     } catch (error) {
       console.log(error.response.data);
       setIsLoading(false);
@@ -54,10 +57,10 @@ export default function LoginForm() {
     }
   };
   useEffect(() => {
-    if(user){
-      navigate("/app")
+    if (user) {
+      navigate("/app");
     }
-  },[user])
+  }, [user]);
 
   return (
     <div

@@ -1,26 +1,26 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { LOGOUT_URL } from "../constants/routes";
-import { removeUser } from "../utils/userSlice";
+import { EDIT_PROFILE_URL, LOGOUT_URL, VIEW_PROFILE } from "../constants/routes";
+import { addUser, removeUser } from "../utils/userSlice";
 import ProfileCard from "./ProfileCard";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((store) => store?.user);
-  const [showProfileCard, setShowProfileCard] = useState(false)
-  
-
+  const [showProfileCard, setShowProfileCard] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const handleLogout = async () => {
     try {
       const res = await axios.post(LOGOUT_URL, {}, { withCredentials: true });
-      if(res.data.success){
+      if (res.data.success) {
         dispatch(removeUser());
-        navigate("/login")
+        navigate("/login");
       }
     } catch (error) {
       console.log(error.response.data);
@@ -28,20 +28,38 @@ const Navbar = () => {
   };
 
   const handleProfileClick = () => {
-    setShowProfileCard(true)
-  }
+    setShowProfileCard(true);
+  };
 
   const handleCloseProfileCard = () => {
-    setShowProfileCard(false)
-  }
+    setShowProfileCard(false);
+  };
 
-  const handleUpdateUser = (updatedUser) => {
-    // Here you would typically update the user data in your global state or backend
-    console.log("User updated:", updatedUser)
-    // For now, we'll just close the profile card
-    setShowProfileCard(false)
-  }
+  const handleUpdateUser = async (updatedUser) => {
+    try {
+      setIsLoading(true);
+      const res = await axios.post(
+        EDIT_PROFILE_URL,
+        { ...updatedUser },
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.data.success) {
+        toast.success(res.data?.message);
+        dispatch(addUser(res.data));
+      }
+      setShowProfileCard(false);
+    } catch (error) {
+      setIsLoading(false);
+      toast.error(error.response?.data?.message || "Something went wrong");
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  
   return (
     <div
       className="navbar h-[64px] top-0 text-gray-200 z-20"
@@ -63,10 +81,7 @@ const Navbar = () => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                />
+                <img alt="img" src={user?.photoUrl} />
               </div>
             </div>
             <ul
@@ -89,7 +104,12 @@ const Navbar = () => {
         </div>
       )}
       {showProfileCard && user && (
-        <ProfileCard user={user} onClose={handleCloseProfileCard} onUpdate={handleUpdateUser} />
+        <ProfileCard
+          loading={isLoading}
+          user={user}
+          onClose={handleCloseProfileCard}
+          onUpdate={handleUpdateUser}
+        />
       )}
     </div>
   );

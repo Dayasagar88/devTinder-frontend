@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Badge, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import EditProfileForm from "./EditProfileForm";
+import { Badge } from "./ui/badge";
 
 
-const ProfileCard = ({ user, onClose, onUpdate }) => {
+const ProfileCard = ({ user, onClose, onUpdate,loading }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleEditClick = () => {
@@ -18,7 +19,7 @@ const ProfileCard = ({ user, onClose, onUpdate }) => {
     setIsEditing(false);
   };
 
-  return (
+ return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <Card className="w-full max-w-md">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -31,6 +32,7 @@ const ProfileCard = ({ user, onClose, onUpdate }) => {
         <CardContent>
           {isEditing ? (
             <EditProfileForm
+            loading={loading}
               user={user}
               onSave={handleSave}
               onCancel={() => setIsEditing(false)}
@@ -44,8 +46,8 @@ const ProfileCard = ({ user, onClose, onUpdate }) => {
                     alt={`${user?.firstName} ${user?.lastName}`}
                   />
                   <AvatarFallback>
-                    {user?.firstName[0]}
-                    {user?.lastName[0]}
+                    {user?.firstName}
+                    {user?.lastName}
                   </AvatarFallback>
                 </Avatar>
                 <h3 className="mt-2 text-xl font-semibold">{`${user?.firstName} ${user?.lastName}`}</h3>

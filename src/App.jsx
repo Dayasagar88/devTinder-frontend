@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUpForm from "./components/SignUpForm";
 import Login from "./components/Login";
-import Profile from "./components/Profile";
 import Hero from "./components/Hero";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
@@ -21,7 +20,6 @@ export default function App() {
                 <Route path="/app" element={<Feed />} />
                 <Route path="/signup" element={<SignUpForm />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/app/profile" element={<Profile />} />
               </Route>
             </Routes>
           </BrowserRouter>
