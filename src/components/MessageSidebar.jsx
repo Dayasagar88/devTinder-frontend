@@ -1,16 +1,10 @@
 import { X } from "lucide-react"
+import { useSelector } from "react-redux"
 
-const messages = [
-  { id: 1, name: "Alice Johnson", message: "Hey, I saw your React project. It looks great!", time: "2m ago" },
-  { id: 2, name: "Bob Smith", message: "Are you interested in collaborating on a Node.js project?", time: "1h ago" },
-  {
-    id: 3,
-    name: "Carol Williams",
-    message: "Thanks for connecting! What are you working on these days?",
-    time: "3h ago",
-  },
-]
+
+
 export default function MessageSidebar({ isOpen, onClose }) {
+  const connections = useSelector(store => store?.connections)
   return (
     <div
   className={`fixed top-[64px] left-0 w-80 h-[calc(100vh-64px)] bg-[#3B3A73] shadow-lg transform transition-transform duration-300 ease-in-out ${
@@ -25,13 +19,13 @@ export default function MessageSidebar({ isOpen, onClose }) {
           </button>
         </div>
         <div className="space-y-4">
-          {messages.map((message) => (
-            <div key={message.id} className="border-b pb-2">
+          {connections?.map((message) => (
+            <div key={message._id} className="border-b pb-2">
               <div className="flex justify-between items-start">
-                <span className="font-semibold">{message.name}</span>
-                <span className="text-xs">{message.time}</span>
+                <span className="font-semibold">{message?.firstName} {message?.lastName}</span>
+                <span className="text-xs">{message?.time || "1h"}</span>
               </div>
-              <p className="text-sm text-gray-400 truncate">{message.message}</p>
+              <p className="text-sm text-gray-400 truncate">{message?.message || `Hey ${message?.firstName}! Whatsapp...`}</p>
             </div>
           ))}
         </div>

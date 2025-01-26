@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -7,10 +7,13 @@ import { VIEW_PROFILE } from "../constants/routes";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
-const Body = () => {
+export const AppContext = createContext();
+
+const Body = ({ children }) => {
   const dispatch = useDispatch();
   const userData = useSelector((store) => store?.user);
   const navigate = useNavigate();
+  const [showProfileCard, setShowProfileCard] = useState(false);
 
   const fetchUserData = async () => {
     if (userData) return;
@@ -32,11 +35,13 @@ const Body = () => {
   }, [userData]);
 
   return (
-    <div>
-      <Navbar />
-      <Outlet />
-      <Footer />
-    </div>
+    <AppContext.Provider value={{ showProfileCard, setShowProfileCard }}>
+      <div>
+        <Navbar />
+        <Outlet />
+        <Footer />
+      </div>
+    </AppContext.Provider>
   );
 };
 

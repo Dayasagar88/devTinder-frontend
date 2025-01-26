@@ -1,25 +1,37 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { EDIT_PROFILE_URL, LOGOUT_URL, VIEW_PROFILE } from "../constants/routes";
+import {
+  EDIT_PROFILE_URL,
+  LOGOUT_URL,
+  VIEW_PROFILE,
+} from "../constants/routes";
 import { addUser, removeUser } from "../utils/userSlice";
 import ProfileCard from "./ProfileCard";
 import { toast } from "sonner";
+import { Badge } from "./ui/badge";
+import { removeConnections } from "@/utils/connectionSlice";
+import { removeConnectionRequest } from "@/utils/connectionRequestSlice";
+import { removeFeed } from "@/utils/feedSlice";
+import { AppContext } from "./Body";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((store) => store?.user);
-  const [showProfileCard, setShowProfileCard] = useState(false);
+  const {showProfileCard, setShowProfileCard} = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isProfileComplete, setIsProfileComplete] = useState(false);
 
   const handleLogout = async () => {
     try {
       const res = await axios.post(LOGOUT_URL, {}, { withCredentials: true });
       if (res.data.success) {
         dispatch(removeUser());
+        dispatch(removeConnections());
+        dispatch(removeConnectionRequest());
+        dispatch(removeFeed());
         navigate("/login");
       }
     } catch (error) {
@@ -47,9 +59,10 @@ const Navbar = () => {
       );
       if (res.data.success) {
         toast.success(res.data?.message);
-        dispatch(addUser(res.data));
+        dispatch(addUser(res.data?.loggedInUser));
+        // setIsProfileComplete(true)
+        setShowProfileCard(false);
       }
-      setShowProfileCard(false);
     } catch (error) {
       setIsLoading(false);
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -59,7 +72,6 @@ const Navbar = () => {
     }
   };
 
-  
   return (
     <div
       className="navbar h-[64px] top-0 text-gray-200 z-20"
@@ -74,6 +86,12 @@ const Navbar = () => {
       </div>
       {user && (
         <div className="flex-none gap-2">
+          {!isProfileComplete && (
+            <Badge variant="secondary">
+              &quot;Hey {user?.firstName}! Complete your profile <br /> and make
+              it stand out!&quot;
+            </Badge>
+          )}
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}

@@ -2,12 +2,13 @@
 
 import axios from "axios";
 import { Eye, EyeClosed, Loader } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LOGIN_URL } from "../constants/routes";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { toast } from "sonner";
+import { AppContext } from "./Body";
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +19,7 @@ export default function LoginForm() {
     password: "",
   });
   const user = useSelector((store) => store.user);
+  const {setShowProfileCard} = useContext(AppContext)
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,11 +47,13 @@ export default function LoginForm() {
         }
       );
       if (res.data.success) {
-        dispatch(addUser(res.data));
+        dispatch(addUser(res.data?.user));
         toast.success(res.data?.message);
+        setShowProfileCard(true)
         navigate("/app");
       }
     } catch (error) {
+      toast.error(error.response.data?.message)
       console.log(error.response.data);
       setIsLoading(false);
     } finally {

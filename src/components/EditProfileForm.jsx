@@ -4,8 +4,32 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Loader } from "lucide-react";
+import { Badge } from "./ui/badge";
 
-const EditProfileForm = ({ user, onSave, onCancel ,loading}) => {
+const exampleSkills = [
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "React.js",
+  "Node.js",
+  "Express.js",
+  "MongoDB",
+  "SQL",
+  "TypeScript",
+  "Redux",
+  "Next.js",
+  "Tailwind CSS",
+  "Git",
+  "Docker",
+  "Firebase",
+  "GraphQL",
+  "Python",
+  "Jest",
+  "AWS",
+  "Kubernetes",
+];
+
+const EditProfileForm = ({ user, onSave, onCancel, loading }) => {
   const [formData, setFormData] = useState(user);
 
   const handleChange = (e) => {
@@ -21,6 +45,18 @@ const EditProfileForm = ({ user, onSave, onCancel ,loading}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(formData);
+  };
+
+  const handleExampleSkillsChange = (skill) => {
+    setFormData((prevData) => {
+      if (!prevData.skills.includes(skill)) {
+        return {
+          ...prevData,
+          skills: [...prevData.skills, skill],
+        };
+      }
+      return prevData;
+    });
   };
 
   return (
@@ -78,12 +114,19 @@ const EditProfileForm = ({ user, onSave, onCancel ,loading}) => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
-            <Input
+            <select
               id="gender"
               name="gender"
               value={formData.gender}
               onChange={handleChange}
-            />
+              className="block w-full px-3 py-2 text-sm border-gray-800 rounded-md focus:outline-none focus:ring-[1.5px] focus:ring-blue-700 focus:ring-opacity-50 border "
+            >
+              <option disabled  value="Select">Select</option>{" "}
+              {/* Default placeholder */}
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Others">Other</option>
+            </select>
           </div>
         </div>
         <div className="space-y-2">
@@ -95,6 +138,16 @@ const EditProfileForm = ({ user, onSave, onCancel ,loading}) => {
             value={formData.skills.join(", ")}
             onChange={handleSkillsChange}
           />
+          {exampleSkills.map((skill, index) => (
+            <Badge
+              key={index}
+              onClick={() => handleExampleSkillsChange(skill)}
+              variant="secondary"
+              className="mr-2 cursor-pointer"
+            >
+              {skill}
+            </Badge>
+          ))}
         </div>
         <div className="space-y-2">
           <Label htmlFor="profilePicture">Profile Picture URL</Label>
@@ -109,7 +162,9 @@ const EditProfileForm = ({ user, onSave, onCancel ,loading}) => {
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          <Button disabled={loading} type="submit">{loading ? <Loader className=" animate-spin"/> : "Save Changes"}</Button>
+          <Button disabled={loading} type="submit">
+            {loading ? <Loader className=" animate-spin" /> : "Save Changes"}
+          </Button>
         </div>
       </form>
     )
