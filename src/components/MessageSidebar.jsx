@@ -7,7 +7,7 @@ export default function MessageSidebar({ isOpen, onClose }) {
   const connections = useSelector(store => store?.connections)
   return (
     <div
-  className={`fixed top-[64px] left-0 w-80 h-[calc(100vh-64px)] bg-[#3B3A73] shadow-lg transform transition-transform duration-300 ease-in-out ${
+  className={`fixed top-[64px] left-0 lg:w-80 w-full h-[calc(100vh-64px)] bg-[#3B3A73] shadow-lg transform transition-transform duration-300 ease-in-out ${
     isOpen ? "-translate-x-0" : "-translate-x-full"
   }`}
 >

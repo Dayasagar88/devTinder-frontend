@@ -19,7 +19,7 @@ export default function LoginForm() {
     password: "",
   });
   const user = useSelector((store) => store.user);
-  const {setShowProfileCard} = useContext(AppContext)
+  const { setShowProfileCard } = useContext(AppContext);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,11 +49,12 @@ export default function LoginForm() {
       if (res.data.success) {
         dispatch(addUser(res.data?.user));
         toast.success(res.data?.message);
-        setShowProfileCard(true)
         navigate("/app");
+       
+        if (res.data?.user?.new) setShowProfileCard(true);
       }
     } catch (error) {
-      toast.error(error.response.data?.message)
+      toast.error(error.response.data?.message);
       console.log(error.response.data);
       setIsLoading(false);
     } finally {

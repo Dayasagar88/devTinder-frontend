@@ -8,6 +8,7 @@ import { toast } from "sonner";
 export default function ConnectionRequestsPage({
   isOpen,
   onClose,
+  getConnections,
 }) {
   const connectionRequests = useSelector((store) => store?.connectionRequests);
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ export default function ConnectionRequestsPage({
         );
         dispatch(addConnectionRequest(updatedConnectionRequests));
         toast.success(res.data?.message);
+        if (value === "accepted") getConnections();
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Somthing went wrong");

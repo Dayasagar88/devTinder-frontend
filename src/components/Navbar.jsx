@@ -52,7 +52,7 @@ const Navbar = () => {
       setIsLoading(true);
       const res = await axios.post(
         EDIT_PROFILE_URL,
-        { ...updatedUser },
+        { ...updatedUser , new : false},
         {
           withCredentials: true,
         }
@@ -61,7 +61,7 @@ const Navbar = () => {
         toast.success(res.data?.message);
         dispatch(addUser(res.data?.loggedInUser));
         // setIsProfileComplete(true)
-        setShowProfileCard(false);
+        // setShowProfileCard(false);
       }
     } catch (error) {
       setIsLoading(false);

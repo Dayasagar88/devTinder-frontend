@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MessageSidebar from "./MessageSideBar";
-import { HomeIcon, MessageCircle, Search, Users } from "lucide-react";
+import {
+  Handshake,
+  HomeIcon,
+  MessageCircle,
+  Search,
+  Users,
+} from "lucide-react";
 import ConnectionRequestsPage from "./ConnectionRequestsPage";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -20,30 +26,66 @@ import { addConnectionRequest } from "@/utils/connectionRequestSlice";
 import { addConnections } from "@/utils/connectionSlice";
 import { toast } from "sonner";
 import DevloperCard from "./DevloperCard";
+import ConnectionPage from "./ConnectionPage";
 
 export default function FeedPage() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // const [currentIndex, setCurrentIndex] = useState(0);
   const [isMessageSidebarOpen, setIsMessageSidebarOpen] = useState(false);
   const [isConnectionRequestsOpen, setIsConnectionRequestsOpen] =
     useState(false);
-  const [direction, setDirection] = useState(null);
+  const [isConnectionPageOpen, setIsConnectionPageOpen] = useState(false);
+  // const [direction, setDirection] = useState(null);
   const user = useSelector((store) => store?.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [connectionRequests, setConnectionRequest] = useState([]);
   const userFeed = useSelector((store) => store?.feed) || [];
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState("right");
 
   const currentDeveloper = userFeed[currentIndex];
 
-  const handleSwipe = (swipeDirection) => {
-    setDirection(swipeDirection);
-    if (currentIndex < userFeed.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setCurrentIndex(0);
+  const handleSwipe = async (swipeDirection) => {
+    try {
+      setDirection(swipeDirection);
+  
+      // Determine the decision based on swipe direction
+      const decision = swipeDirection === "right" ? "like" : "pass";
+      const userId = currentDeveloper?._id; // Use the current developer's ID
+  
+      // Call the API to send the swipe decision
+      const res = await axios.post(
+        SEND_CONNECTION_URL + `/${decision}/${userId}`,
+        {},
+        { withCredentials: true }
+      );
+  
+      if (res.data.success) {
+        toast.success(res.data?.message);
+  
+        // Dispatch action to update the feed
+        dispatch(updateFeed(userId));
+  
+        // Update the current index only if there are developers left in the feed
+        // 5 , 1 -> false -> 0
+        // 4 , 1 -> false -> 0
+        // 3 , 1 -> false -> 0
+        // 2 , 1 -> false -> 0
+        // 1 , 1 -> false -> 0
+        if (userFeed.length > 1) {
+          setCurrentIndex((prevIndex) => (prevIndex >= userFeed.length - 1 ? 0 : prevIndex));
+        } else {
+          // If the feed is empty, refresh it
+          getFeed();
+          setCurrentIndex(0);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
-
+  
   const getConnectionRequest = async () => {
     try {
       const res = await axios.get(RECEIVED_CONNECTION_REQUEST_URL, {
@@ -89,27 +131,27 @@ export default function FeedPage() {
     }
   };
 
-  const handleUserDecision = async (decision, userId) => {
-    try {
-      const res = await axios.post(
-        SEND_CONNECTION_URL + `/${decision}/${userId}`,
-        {},
-        { withCredentials: true }
-      );
+  // const handleUserDecision = async (decision, userId) => {
+  //   try {
+  //     const res = await axios.post(
+  //       SEND_CONNECTION_URL + `/${decision}/${userId}`,
+  //       {},
+  //       { withCredentials: true }
+  //     );
 
-      if (res.data.success) {
-        toast.success(res.data?.message);
-        dispatch(updateFeed(userId));
+  //     if (res.data.success) {
+  //       toast.success(res.data?.message);
+  //       // dispatch(updateFeed(userId));
 
-        if (userFeed.length === 1) {
-          getFeed();
-        }
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "Something went wrong");
-    }
-  };
+  //       if (userFeed.length === 1) {
+  //         getFeed();
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(error.response?.data?.message || "Something went wrong");
+  //   }
+  // };
 
   useEffect(() => {
     if (!user) {
@@ -131,10 +173,11 @@ export default function FeedPage() {
         background: "linear-gradient(to right, #514A9D, #24C6DC)",
       }}
     >
-      {userFeed.length > 0 ? (
+      {userFeed?.length > 0 ? (
         <DevloperCard
           direction={direction}
           currentDeveloper={currentDeveloper}
+          onSwipe={handleSwipe} // Pass the swipe handler
         />
       ) : (
         <div className="text-center flex-grow">
@@ -150,7 +193,7 @@ export default function FeedPage() {
           <button
             onClick={() => {
               handleSwipe("left");
-              handleUserDecision("pass", currentDeveloper._id);
+              // handleUserDecision("pass", currentDeveloper._id);
             }}
             className="px-6 py-3 bg-red-500 text-white rounded-full font-semibold transition-all duration-300 ease-in-out hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
           >
@@ -159,7 +202,7 @@ export default function FeedPage() {
           <button
             onClick={() => {
               handleSwipe("right");
-              handleUserDecision("like", currentDeveloper._id);
+              // handleUserDecision("like", currentDeveloper._id);
             }}
             className="px-6 py-3 bg-green-500 text-white rounded-full font-semibold transition-all duration-300 ease-in-out hover:bg-green-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 hover-glow"
           >
@@ -168,9 +211,12 @@ export default function FeedPage() {
         </div>
       )}
       <nav className="w-full max-w-md mt-12 flex justify-around items-center bg-white bg-opacity-10 backdrop-blur-lg rounded-full p-2">
-        <button className="p-2 text-white hover:text-blue-300 transition-colors duration-300">
-          <div className="tooltip" data-tip="Home">
-            <HomeIcon title="Home" className="h-6 w-6" />
+        <button
+          onClick={() => setIsConnectionPageOpen(!isConnectionPageOpen)}
+          className="p-2 text-white hover:text-blue-300 transition-colors duration-300"
+        >
+          <div className="tooltip" data-tip="Connections">
+            <Handshake title="Home" className="h-6 w-6" />
           </div>
         </button>
         <button
@@ -201,9 +247,14 @@ export default function FeedPage() {
         onClose={() => setIsMessageSidebarOpen(false)}
       />
       <ConnectionRequestsPage
+        getConnections={getConnections}
         updateConnections={getConnectionRequest}
         isOpen={isConnectionRequestsOpen}
         onClose={() => setIsConnectionRequestsOpen(false)}
+      />
+      <ConnectionPage
+        isOpen={isConnectionPageOpen}
+        onClose={() => setIsConnectionPageOpen(false)}
       />
     </div>
   );
