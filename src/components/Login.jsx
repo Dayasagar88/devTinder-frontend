@@ -50,6 +50,7 @@ export default function LoginForm() {
         dispatch(addUser(res.data?.user));
         toast.success(res.data?.message);
         navigate("/app");
+        
        
         if (res.data?.user?.new) setShowProfileCard(true);
       }

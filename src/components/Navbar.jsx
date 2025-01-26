@@ -60,8 +60,6 @@ const Navbar = () => {
       if (res.data.success) {
         toast.success(res.data?.message);
         dispatch(addUser(res.data?.loggedInUser));
-        // setIsProfileComplete(true)
-        // setShowProfileCard(false);
       }
     } catch (error) {
       setIsLoading(false);
@@ -71,6 +69,17 @@ const Navbar = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (
+      user?.new || 
+      (!user?.about && !user?.profession && !user?.age && !user?.gender && !user?.photoUrl)
+    ) {
+      setIsProfileComplete(false);
+    } else {
+      setIsProfileComplete(true);
+    }
+  }, [user]);
 
   return (
     <div
