@@ -61,20 +61,22 @@ const EditProfileForm = ({ user, onSave, onCancel, loading }) => {
 
   return (
     formData && (
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">First Name</Label>
+      <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+        <div className="grid grid-cols-2 gap-4 text-xs">
+          <div className="space-y-1 text-xs">
+            <Label className="md:text-normal text-xs" htmlFor="firstName">First Name</Label>
             <Input
+              className="text-xs"
               id="firstName"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
+          <div className="md:space-y-2 space-y-1">
+            <Label className="md:text-normal text-xs" htmlFor="lastName">Last Name</Label>
             <Input
+              className="text-xs"
               id="lastName"
               name="lastName"
               value={formData.lastName}
@@ -82,18 +84,20 @@ const EditProfileForm = ({ user, onSave, onCancel, loading }) => {
             />
           </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="profession">Profession</Label>
+        <div className="md:space-y-2 space-y-1">
+          <Label className="md:text-normal text-xs" htmlFor="profession">Profession</Label>
           <Input
+            className="text-xs"
             id="profession"
             name="profession"
             value={formData.profession}
             onChange={handleChange}
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="about">About</Label>
+        <div className="md:space-y-2 space-y-1">
+          <Label className="md:text-normal text-xs" htmlFor="about">About</Label>
           <Textarea
+            className="text-xs md:text-normal scrollbar-hide "
             id="about"
             name="about"
             value={formData.about}
@@ -102,9 +106,10 @@ const EditProfileForm = ({ user, onSave, onCancel, loading }) => {
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="age">Age</Label>
+          <div className="md:space-y-2 space-y-1">
+            <Label className="md:text-normal text-xs" htmlFor="age">Age</Label>
             <Input
+              className="text-xs"
               type="number"
               id="age"
               name="age"
@@ -112,8 +117,8 @@ const EditProfileForm = ({ user, onSave, onCancel, loading }) => {
               onChange={handleChange}
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="gender">Gender</Label>
+          <div className="md:space-y-2 space-y-1">
+            <Label className="md:text-normal text-xs" htmlFor="gender">Gender</Label>
             <select
               id="gender"
               name="gender"
@@ -121,7 +126,9 @@ const EditProfileForm = ({ user, onSave, onCancel, loading }) => {
               onChange={handleChange}
               className="block w-full px-3 py-2 text-sm border-gray-800 rounded-md focus:outline-none focus:ring-[1.5px] focus:ring-blue-700 focus:ring-opacity-50 border "
             >
-              <option disabled  value="Select">Select</option>{" "}
+              <option disabled value="Select">
+                Select
+              </option>{" "}
               {/* Default placeholder */}
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -129,29 +136,33 @@ const EditProfileForm = ({ user, onSave, onCancel, loading }) => {
             </select>
           </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="skills">Skills (comma-separated)</Label>
+        <div className="md:space-y-2 space-y-1">
+          <Label className="md:text-normal text-xs" htmlFor="skills">Skills (comma-separated)</Label>
           <Input
+            className="md:text-normal text-xs"
             placeholder="Enter skills (e.g., HTML, CSS, JavaScript)"
             id="skills"
             name="skills"
             value={formData.skills.join(", ")}
             onChange={handleSkillsChange}
           />
-          {exampleSkills.map((skill, index) => (
-            <Badge
-              key={index}
-              onClick={() => handleExampleSkillsChange(skill)}
-              variant="secondary"
-              className="mr-2 cursor-pointer"
-            >
-              {skill}
-            </Badge>
-          ))}
+          <div className="space-y-1 md:h-full h-20 overflow-auto scrollbar-hide ">
+            {exampleSkills.map((skill, index) => (
+              <Badge
+                key={index}
+                onClick={() => handleExampleSkillsChange(skill)}
+                variant="secondary"
+                className="mr-1 cursor-pointer "
+              >
+                {skill}
+              </Badge>
+            ))}
+          </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="profilePicture">Profile Picture URL</Label>
+        <div className="md:space-y-2 space-y-1">
+          <Label className="md:text-normal text-xs" htmlFor="profilePicture">Profile Picture URL</Label>
           <Input
+            className="text-xs"
             id="photoUrl"
             name="photoUrl"
             value={formData.photoUrl}

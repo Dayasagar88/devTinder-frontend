@@ -16,7 +16,7 @@ const ConnectionPage = ({isOpen,onClose}) => {
     }
   return (
     <div
-  className={`fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity duration-300 ${
+  className={`fixed inset-0 bg-gray-900 md:px-0 px-2 bg-opacity-50 backdrop-blur-sm transition-opacity duration-300 ${
     isOpen ? "opacity-100 z-50" : "opacity-0 -z-10"
   }`}
 >

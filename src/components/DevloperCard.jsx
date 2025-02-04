@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 
 const DeveloperCard = ({ currentDeveloper, direction, onSwipe }) => {
-  return (
+  return  (
     <div className="w-full flex items-center  flex-grow justify-center">
       <AnimatePresence>
         {currentDeveloper && (

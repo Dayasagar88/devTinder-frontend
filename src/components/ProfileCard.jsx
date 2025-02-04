@@ -20,7 +20,7 @@ const ProfileCard = ({ user, onClose, onUpdate,loading }) => {
   };
 
  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 md:px-0 px-2">
       <Card className="w-full max-w-md">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-2xl font-bold">Profile</CardTitle>

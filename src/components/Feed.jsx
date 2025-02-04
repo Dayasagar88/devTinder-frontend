@@ -48,24 +48,24 @@ export default function FeedPage() {
   const handleSwipe = async (swipeDirection) => {
     try {
       setDirection(swipeDirection);
-  
+
       // Determine the decision based on swipe direction
       const decision = swipeDirection === "right" ? "like" : "pass";
       const userId = currentDeveloper?._id; // Use the current developer's ID
-  
+
       // Call the API to send the swipe decision
       const res = await axios.post(
         SEND_CONNECTION_URL + `/${decision}/${userId}`,
         {},
         { withCredentials: true }
       );
-  
+
       if (res.data.success) {
         toast.success(res.data?.message);
-  
+
         // Dispatch action to update the feed
         dispatch(updateFeed(userId));
-  
+
         // Update the current index only if there are developers left in the feed
         // 5 , 1 -> false -> 0
         // 4 , 1 -> false -> 0
@@ -73,7 +73,9 @@ export default function FeedPage() {
         // 2 , 1 -> false -> 0
         // 1 , 1 -> false -> 0
         if (userFeed.length > 1) {
-          setCurrentIndex((prevIndex) => (prevIndex >= userFeed.length - 1 ? 0 : prevIndex));
+          setCurrentIndex((prevIndex) =>
+            prevIndex >= userFeed.length - 1 ? 0 : prevIndex
+          );
         } else {
           // If the feed is empty, refresh it
           getFeed();
@@ -85,7 +87,7 @@ export default function FeedPage() {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
-  
+
   const getConnectionRequest = async () => {
     try {
       const res = await axios.get(RECEIVED_CONNECTION_REQUEST_URL, {
@@ -173,7 +175,11 @@ export default function FeedPage() {
         background: "linear-gradient(to right, #514A9D, #24C6DC)",
       }}
     >
-      {userFeed?.length > 0 ? (
+      {!userFeed ? (
+        <div className="flex-grow flex items-center justify-center">
+          <span className="loading loading-ring md:w-16 loading-lg"></span>
+        </div>
+      ) : userFeed.length > 0 ? (
         <DevloperCard
           direction={direction}
           currentDeveloper={currentDeveloper}
